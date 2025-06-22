@@ -23,7 +23,7 @@ class DataTransformation:
         try:
             numerical_columns = ["tenure", "MonthlyCharges", "TotalCharges"]
             categorical_columns = [
-                "gender", "Dependents", "MultipleLines",
+                "SeniorCitizen", "Dependents", "MultipleLines",
                 "InternetService", "OnlineSecurity", "OnlineBackup", "DeviceProtection",
                 "TechSupport", "StreamingTV", "StreamingMovies", "Contract",
                 "PaperlessBilling", "PaymentMethod"
