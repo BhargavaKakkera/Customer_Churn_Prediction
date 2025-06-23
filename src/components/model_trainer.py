@@ -37,7 +37,7 @@ class ModelTrainer:
 
             # Apply SMOTEENN to handle class imbalance
             logging.info("Applying SMOTEENN to training data")
-            smote_enn = SMOTEENN()
+            smote_enn = SMOTEENN(sampling_strategy='auto', random_state=42,n_jobs = -1)
             X_train, y_train = smote_enn.fit_resample(X_train, y_train)
 
             # Base models
@@ -62,10 +62,10 @@ class ModelTrainer:
             ]
 
             models["Voting Classifier"] = VotingClassifier(estimators=base_estimators, voting='soft')
-            models["Stacking Classifier"] = StackingClassifier(estimators=base_estimators, final_estimator=LogisticRegression())
+            models["Stacking Classifier"] = StackingClassifier(estimators=base_estimators, final_estimator= LogisticRegression())
 
             params = {
-                "Logistic Regression": {"C": [0.1, 1.0, 10]},
+                "Logistic Regression": {"C": [0.1, 1.0, 10],"penalty": ['l1','l2'],"solver": ['liblinear', 'saga'], "max_iter": [10000]},
                 "Random Forest": {"n_estimators": [50, 100], "max_depth": [None, 10, 20], "min_samples_split": [2, 5], "min_samples_leaf": [1, 2]},
                 "Decision Tree": {},
                 "KNN": {},
