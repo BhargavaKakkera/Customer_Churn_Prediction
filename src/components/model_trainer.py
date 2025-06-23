@@ -56,7 +56,8 @@ class ModelTrainer:
             base_estimators = [
                 ('lr', LogisticRegression()),
                 ('rf', RandomForestClassifier()),
-                ('nb', GaussianNB()),
+                ('xgb', XGBClassifier()),
+                ('svm', SVC(probability=True)),
 
             ]
 
