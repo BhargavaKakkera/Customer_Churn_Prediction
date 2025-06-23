@@ -35,7 +35,8 @@ def predict_datapoint():
         pred_df = data.get_data_as_data_frame()
         predict_pipeline = PredictPipeline()
         result = predict_pipeline.predict(pred_df)
-        return render_template('home.html', results=result[0])
+        prediction_label = "Churn" if result[0] == 1 else "Not Churn"
+        return render_template('home.html', results=prediction_label)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
