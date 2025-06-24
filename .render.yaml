@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: churn-prediction-app
+    env: docker
+    plan: free
+    branch: main
+    region: oregon
+    repo: https://github.com/BhargavaKakkera/Customer_Churn_prediction
+    autoDeploy: true
