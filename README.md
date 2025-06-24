@@ -36,10 +36,10 @@ services:
 
 #### 🐻 Docker Deployment
 
-🔗 **DockerHub Image**: [bhargava1420/churn-prediction](https://hub.docker.com/r/bhargava1420/churn-prediction)
+🔗 **DockerHub Image**: (https://hub.docker.com/r/bhargava1420/churn-prediction)
 
 ```bash
-docker pull bhargava1420/churn-prediction:latest
+docker pull bhargava1420/churn-prediction
 docker run -p 5000:5000 bhargava1420/churn-prediction
 ```
 
