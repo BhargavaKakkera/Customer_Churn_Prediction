@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.DS_Store
+.env
+venv/
+.idea/
+.git/
+data/
+notebooks/
+src/components/       
+src/pipeline/train_pipeline.py
