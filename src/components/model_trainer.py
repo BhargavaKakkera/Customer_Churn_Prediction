@@ -53,16 +53,16 @@ class ModelTrainer:
             }
 
             # Add Voting and Stacking classifiers
-            base_estimators = [
-                ('lr', LogisticRegression()),
-                ('rf', RandomForestClassifier()),
-                ('xgb', XGBClassifier()),
-                ('svm', SVC(probability=True)),
+            # base_estimators = [
+            #     ('lr', LogisticRegression()),
+            #     ('rf', RandomForestClassifier()),
+            #     ('xgb', XGBClassifier()),
+            #     ('svm', SVC(probability=True)),
 
-            ]
+            # ]
 
-            models["Voting Classifier"] = VotingClassifier(estimators=base_estimators, voting='soft')
-            models["Stacking Classifier"] = StackingClassifier(estimators=base_estimators, final_estimator= LogisticRegression())
+            # models["Voting Classifier"] = VotingClassifier(estimators=base_estimators, voting='soft')
+            # models["Stacking Classifier"] = StackingClassifier(estimators=base_estimators, final_estimator= LogisticRegression())
 
             params = {
                 "Logistic Regression": {"C": [0.1, 1.0, 10],"penalty": ['l1','l2'],"solver": ['liblinear', 'saga'], "max_iter": [10000]},
