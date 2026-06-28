@@ -1,9 +1,10 @@
-numpy
-pandas
-matplotlib
-seaborn
-scikit-learn
-imblearn
-xgboost == 1.7.6
-dill
-flask
+numpy==1.26.4
+pandas==2.2.2
+matplotlib==3.8.4
+seaborn==0.13.2
+scipy==1.13.1
+scikit-learn==1.4.2
+imbalanced-learn==0.12.3
+xgboost==1.7.6
+dill==0.3.8
+Flask==3.0.3

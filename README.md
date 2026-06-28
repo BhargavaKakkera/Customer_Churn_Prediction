@@ -120,8 +120,3 @@ python app.py
 
 ---
 
-### 👤 Author
-
-**Bhargava Kakkera**
-🔗 GitHub: https://github.com/BhargavaKakkera/Customer_Churn_Prediction
-📧 Email: [bhargavakakkera@gmail.com]
