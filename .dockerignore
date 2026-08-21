@@ -9,5 +9,5 @@ venv/
 .git/
 data/
 notebooks/
-src/components/       
+src/notebook/
 src/pipeline/train_pipeline.py
