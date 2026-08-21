@@ -13,8 +13,9 @@ class PredictPipeline:
 
     def predict(self, features):
         try:
-            model_path = os.path.join("saved_model", "model.pkl")
-            preprocessor_path = os.path.join("saved_model", "preprocessor.pkl")
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            model_path = os.path.join(base_dir, "saved_model", "model.pkl")
+            preprocessor_path = os.path.join(base_dir, "saved_model", "preprocessor.pkl")
 
             model_data = load_object(file_path=model_path)
             preprocessor = load_object(file_path=preprocessor_path)

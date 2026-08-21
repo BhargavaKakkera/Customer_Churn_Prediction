@@ -169,6 +169,14 @@
             <input class="btn-submit" type="submit" value="Predict Churn Risk" />
         </form>
 
+        <!-- Error Display -->
+        {% if error %}
+            <div class="error-card">
+                <div class="error-title">⚠️ Prediction Error</div>
+                <div class="error-message">{{ error }}</div>
+            </div>
+        {% endif %}
+
         <!-- 3-Tier Prediction Result Display -->
         {% if results %}
             <div class="result-card {{ results.class }}">

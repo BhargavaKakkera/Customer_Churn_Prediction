@@ -179,6 +179,28 @@ select.form-control {
     border: 1px solid var(--low-risk-border);
 }
 
+/* Error visualization card */
+.error-card {
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    background-color: var(--high-risk-bg);
+    color: var(--high-risk-color);
+    border: 1px solid var(--high-risk-border);
+    animation: fadeIn 0.4s ease-out;
+}
+
+.error-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.error-message {
+    font-size: 0.95rem;
+}
+
 .result-badge {
     font-size: 1.5rem;
     font-weight: 800;

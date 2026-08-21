@@ -14,50 +14,72 @@ def predict_datapoint():
         return render_template('home.html')
     else:
         form_data = request.form
-        data = CustomData(
-            gender=request.form.get('gender'),
-            SeniorCitizen=request.form.get('SeniorCitizen'),
-            Partner=request.form.get('Partner'),
-            Dependents=request.form.get('Dependents'),
-            PhoneService=request.form.get('PhoneService'),
-            MultipleLines=request.form.get('MultipleLines'),
-            InternetService=request.form.get('InternetService'),
-            OnlineSecurity=request.form.get('OnlineSecurity'),
-            OnlineBackup=request.form.get('OnlineBackup'),
-            DeviceProtection=request.form.get('DeviceProtection'),
-            TechSupport=request.form.get('TechSupport'),
-            StreamingTV=request.form.get('StreamingTV'),
-            StreamingMovies=request.form.get('StreamingMovies'),
-            Contract=request.form.get('Contract'),
-            PaperlessBilling=request.form.get('PaperlessBilling'),
-            PaymentMethod=request.form.get('PaymentMethod'),
-            tenure=float(request.form.get('tenure')),
-            MonthlyCharges=float(request.form.get('MonthlyCharges')),
-            TotalCharges=float(request.form.get('TotalCharges'))
-        )
+        try:
+            tenure_val = request.form.get('tenure')
+            monthly_val = request.form.get('MonthlyCharges')
+            total_val = request.form.get('TotalCharges')
 
-        pred_df = data.get_data_as_data_frame()
-        predict_pipeline = PredictPipeline()
-        proba = predict_pipeline.predict(pred_df)
-        proba_pct = round(proba * 100, 1)
+            if tenure_val is None or str(tenure_val).strip() == '':
+                raise ValueError("Tenure (in months) is required and must be a number.")
+            if monthly_val is None or str(monthly_val).strip() == '':
+                raise ValueError("Monthly Charges is required and must be a number.")
+            if total_val is None or str(total_val).strip() == '':
+                raise ValueError("Total Charges is required and must be a number.")
 
-        # Determine 3-tier risk classification
-        if proba >= 0.60:
-            risk_level = "High Risk"
-            risk_class = "high"
-        elif proba >= 0.35:
-            risk_level = "Medium Risk"
-            risk_class = "medium"
-        else:
-            risk_level = "Low Risk"
-            risk_class = "low"
+            try:
+                tenure = float(tenure_val)
+                MonthlyCharges = float(monthly_val)
+                TotalCharges = float(total_val)
+            except ValueError:
+                raise ValueError("Tenure, Monthly Charges, and Total Charges must be valid numbers.")
 
-        results = {
-            "level": risk_level,
-            "class": risk_class,
-            "probability": proba_pct
-        }
-        return render_template('home.html', results=results, form_data=form_data)
+            data = CustomData(
+                gender=request.form.get('gender', 'Female'),
+                SeniorCitizen=request.form.get('SeniorCitizen', 'No'),
+                Partner=request.form.get('Partner', 'No'),
+                Dependents=request.form.get('Dependents', 'No'),
+                PhoneService=request.form.get('PhoneService', 'Yes'),
+                MultipleLines=request.form.get('MultipleLines', 'No'),
+                InternetService=request.form.get('InternetService', 'Fiber optic'),
+                OnlineSecurity=request.form.get('OnlineSecurity', 'No'),
+                OnlineBackup=request.form.get('OnlineBackup', 'No'),
+                DeviceProtection=request.form.get('DeviceProtection', 'No'),
+                TechSupport=request.form.get('TechSupport', 'No'),
+                StreamingTV=request.form.get('StreamingTV', 'No'),
+                StreamingMovies=request.form.get('StreamingMovies', 'No'),
+                Contract=request.form.get('Contract', 'Month-to-month'),
+                PaperlessBilling=request.form.get('PaperlessBilling', 'Yes'),
+                PaymentMethod=request.form.get('PaymentMethod', 'Electronic check'),
+                tenure=tenure,
+                MonthlyCharges=MonthlyCharges,
+                TotalCharges=TotalCharges
+            )
+
+            pred_df = data.get_data_as_data_frame()
+            predict_pipeline = PredictPipeline()
+            proba = predict_pipeline.predict(pred_df)
+            proba_pct = round(proba * 100, 1)
+
+            # Determine 3-tier risk classification
+            if proba >= 0.60:
+                risk_level = "High Risk"
+                risk_class = "high"
+            elif proba >= 0.35:
+                risk_level = "Medium Risk"
+                risk_class = "medium"
+            else:
+                risk_level = "Low Risk"
+                risk_class = "low"
+
+            results = {
+                "level": risk_level,
+                "class": risk_class,
+                "probability": proba_pct
+            }
+            return render_template('home.html', results=results, form_data=form_data)
+
+        except Exception as e:
+            return render_template('home.html', error=str(e), form_data=form_data)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
