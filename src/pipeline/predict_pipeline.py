@@ -1,9 +1,11 @@
-
 import sys
 import os
+import warnings
 import pandas as pd
 from src.exception import CustomException
 from src.utils import load_object
+
+warnings.filterwarnings("ignore")
 
 class PredictPipeline:
     def __init__(self):
@@ -14,12 +16,21 @@ class PredictPipeline:
             model_path = os.path.join("saved_model", "model.pkl")
             preprocessor_path = os.path.join("saved_model", "preprocessor.pkl")
 
-            model = load_object(file_path=model_path)
+            model_data = load_object(file_path=model_path)
             preprocessor = load_object(file_path=preprocessor_path)
 
+            model = model_data["model"]
+            #threshold = model_data.get("threshold", 0.5)
+
             data_scaled = preprocessor.transform(features)
-            preds = model.predict(data_scaled)
-            return preds
+            
+            # Predict churn probability using model
+            if hasattr(model, "predict_proba"):
+                proba = model.predict_proba(data_scaled)[:, 1][0]
+            else:
+                proba = float(model.predict(data_scaled)[0])
+                
+            return float(proba)
 
         except Exception as e:
             raise CustomException(e, sys)
@@ -27,8 +38,11 @@ class PredictPipeline:
 
 class CustomData:
     def __init__(self,
+                 gender: str,
                  SeniorCitizen: str,
+                 Partner: str,
                  Dependents: str,
+                 PhoneService: str,
                  MultipleLines: str,
                  InternetService: str,
                  OnlineSecurity: str,
@@ -44,8 +58,12 @@ class CustomData:
                  MonthlyCharges: float,
                  TotalCharges: float):
 
+        self.gender = gender
+        # Map "Yes"/"No" back to numeric 1/0 as in original dataset
         self.SeniorCitizen = 1 if SeniorCitizen == "Yes" else 0
+        self.Partner = Partner
         self.Dependents = Dependents
+        self.PhoneService = PhoneService
         self.MultipleLines = MultipleLines
         self.InternetService = InternetService
         self.OnlineSecurity = OnlineSecurity
@@ -64,8 +82,11 @@ class CustomData:
     def get_data_as_data_frame(self):
         try:
             custom_data_input_dict = {
+                "gender": [self.gender],
                 "SeniorCitizen": [self.SeniorCitizen],
+                "Partner": [self.Partner],
                 "Dependents": [self.Dependents],
+                "PhoneService": [self.PhoneService],
                 "MultipleLines": [self.MultipleLines],
                 "InternetService": [self.InternetService],
                 "OnlineSecurity": [self.OnlineSecurity],

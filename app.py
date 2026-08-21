@@ -13,9 +13,13 @@ def predict_datapoint():
     if request.method == 'GET':
         return render_template('home.html')
     else:
+        form_data = request.form
         data = CustomData(
+            gender=request.form.get('gender'),
             SeniorCitizen=request.form.get('SeniorCitizen'),
+            Partner=request.form.get('Partner'),
             Dependents=request.form.get('Dependents'),
+            PhoneService=request.form.get('PhoneService'),
             MultipleLines=request.form.get('MultipleLines'),
             InternetService=request.form.get('InternetService'),
             OnlineSecurity=request.form.get('OnlineSecurity'),
@@ -34,9 +38,26 @@ def predict_datapoint():
 
         pred_df = data.get_data_as_data_frame()
         predict_pipeline = PredictPipeline()
-        result = predict_pipeline.predict(pred_df)
-        prediction_label = "Churn" if result[0] == 1 else "Not Churn"
-        return render_template('home.html', results=prediction_label)
+        proba = predict_pipeline.predict(pred_df)
+        proba_pct = round(proba * 100, 1)
+
+        # Determine 3-tier risk classification
+        if proba >= 0.60:
+            risk_level = "High Risk"
+            risk_class = "high"
+        elif proba >= 0.35:
+            risk_level = "Medium Risk"
+            risk_class = "medium"
+        else:
+            risk_level = "Low Risk"
+            risk_class = "low"
+
+        results = {
+            "level": risk_level,
+            "class": risk_class,
+            "probability": proba_pct
+        }
+        return render_template('home.html', results=results, form_data=form_data)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)

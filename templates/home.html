@@ -1,161 +1,182 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <div class="login">
-      <h1>Customer Churn Prediction</h1>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Customer Churn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='3') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Churn Prediction</h1>
+        <p class="subtitle">Enter customer details below to estimate churn risk level</p>
 
-      <form action="{{ url_for('predict_datapoint') }}" method="post">
-        <h2>Enter Customer Details</h2>
+        <form action="{{ url_for('predict_datapoint') }}" method="post">
+            
+            <!-- Section 1: Demographics (Defaulted on initial GET, preserved on POST) -->
+            <div class="form-section-title">Demographics</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <select class="form-control" name="gender" required>
+                        <option value="Female" {% if form_data and form_data.gender == 'Female' %}selected{% elif not form_data %}selected{% endif %}>Female</option>
+                        <option value="Male" {% if form_data and form_data.gender == 'Male' %}selected{% endif %}>Male</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Senior Citizen</label>
+                    <select class="form-control" name="SeniorCitizen" required>
+                        <option value="No" {% if form_data and form_data.SeniorCitizen == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.SeniorCitizen == 'Yes' %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Partner</label>
+                    <select class="form-control" name="Partner" required>
+                        <option value="No" {% if form_data and form_data.Partner == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.Partner == 'Yes' %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dependents</label>
+                    <select class="form-control" name="Dependents" required>
+                        <option value="No" {% if form_data and form_data.Dependents == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.Dependents == 'Yes' %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
+            </div>
 
-        <div class="mb-3">
-          <label class="form-label">Senior Citizen</label>
-          <select class="form-control" name="SeniorCitizen" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
+            <!-- Section 2: Services Subscribed (Defaulted on initial GET, preserved on POST) -->
+            <div class="form-section-title">Services Subscribed</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Phone Service</label>
+                    <select class="form-control" name="PhoneService" required>
+                        <option value="Yes" {% if form_data and form_data.PhoneService == 'Yes' %}selected{% elif not form_data %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if form_data and form_data.PhoneService == 'No' %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Multiple Lines</label>
+                    <select class="form-control" name="MultipleLines" required>
+                        <option value="No" {% if form_data and form_data.MultipleLines == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.MultipleLines == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No phone service" {% if form_data and form_data.MultipleLines == 'No phone service' %}selected{% endif %}>No phone service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Internet Service</label>
+                    <select class="form-control" name="InternetService" required>
+                        <option value="Fiber optic" {% if form_data and form_data.InternetService == 'Fiber optic' %}selected{% elif not form_data %}selected{% endif %}>Fiber optic</option>
+                        <option value="DSL" {% if form_data and form_data.InternetService == 'DSL' %}selected{% endif %}>DSL</option>
+                        <option value="No" {% if form_data and form_data.InternetService == 'No' %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Online Security</label>
+                    <select class="form-control" name="OnlineSecurity" required>
+                        <option value="No" {% if form_data and form_data.OnlineSecurity == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.OnlineSecurity == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No internet service" {% if form_data and form_data.OnlineSecurity == 'No internet service' %}selected{% endif %}>No internet service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Online Backup</label>
+                    <select class="form-control" name="OnlineBackup" required>
+                        <option value="No" {% if form_data and form_data.OnlineBackup == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.OnlineBackup == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No internet service" {% if form_data and form_data.OnlineBackup == 'No internet service' %}selected{% endif %}>No internet service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Device Protection</label>
+                    <select class="form-control" name="DeviceProtection" required>
+                        <option value="No" {% if form_data and form_data.DeviceProtection == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.DeviceProtection == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No internet service" {% if form_data and form_data.DeviceProtection == 'No internet service' %}selected{% endif %}>No internet service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tech Support</label>
+                    <select class="form-control" name="TechSupport" required>
+                        <option value="No" {% if form_data and form_data.TechSupport == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.TechSupport == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No internet service" {% if form_data and form_data.TechSupport == 'No internet service' %}selected{% endif %}>No internet service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Streaming TV</label>
+                    <select class="form-control" name="StreamingTV" required>
+                        <option value="No" {% if form_data and form_data.StreamingTV == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.StreamingTV == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No internet service" {% if form_data and form_data.StreamingTV == 'No internet service' %}selected{% endif %}>No internet service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Streaming Movies</label>
+                    <select class="form-control" name="StreamingMovies" required>
+                        <option value="No" {% if form_data and form_data.StreamingMovies == 'No' %}selected{% elif not form_data %}selected{% endif %}>No</option>
+                        <option value="Yes" {% if form_data and form_data.StreamingMovies == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No internet service" {% if form_data and form_data.StreamingMovies == 'No internet service' %}selected{% endif %}>No internet service</option>
+                    </select>
+                </div>
+            </div>
 
-        <div class="mb-3">
-          <label class="form-label">Dependents</label>
-          <select class="form-control" name="Dependents" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
+            <!-- Section 3: Billing & Contract (NO Defaults on initial GET, preserved on POST) -->
+            <div class="form-section-title">Billing & Contract Details</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Contract Type</label>
+                    <select class="form-control" name="Contract" required>
+                        <option {% if not form_data or not form_data.Contract %}selected{% endif %} disabled value="">Select</option>
+                        <option value="Month-to-month" {% if form_data and form_data.Contract == 'Month-to-month' %}selected{% endif %}>Month-to-month</option>
+                        <option value="One year" {% if form_data and form_data.Contract == 'One year' %}selected{% endif %}>One year</option>
+                        <option value="Two year" {% if form_data and form_data.Contract == 'Two year' %}selected{% endif %}>Two year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Paperless Billing</label>
+                    <select class="form-control" name="PaperlessBilling" required>
+                        <option {% if not form_data or not form_data.PaperlessBilling %}selected{% endif %} disabled value="">Select</option>
+                        <option value="Yes" {% if form_data and form_data.PaperlessBilling == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if form_data and form_data.PaperlessBilling == 'No' %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Payment Method</label>
+                    <select class="form-control" name="PaymentMethod" required>
+                        <option {% if not form_data or not form_data.PaymentMethod %}selected{% endif %} disabled value="">Select</option>
+                        <option value="Electronic check" {% if form_data and form_data.PaymentMethod == 'Electronic check' %}selected{% endif %}>Electronic check</option>
+                        <option value="Mailed check" {% if form_data and form_data.PaymentMethod == 'Mailed check' %}selected{% endif %}>Mailed check</option>
+                        <option value="Bank transfer (automatic)" {% if form_data and form_data.PaymentMethod == 'Bank transfer (automatic)' %}selected{% endif %}>Bank transfer (automatic)</option>
+                        <option value="Credit card (automatic)" {% if form_data and form_data.PaymentMethod == 'Credit card (automatic)' %}selected{% endif %}>Credit card (automatic)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tenure (in months)</label>
+                    <input class="form-control" type="number" name="tenure" min="0" max="100" step="1" value="{{ form_data.tenure if form_data else '' }}" placeholder="e.g. 12" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Monthly Charges ($)</label>
+                    <input class="form-control" type="number" name="MonthlyCharges" min="0" max="200" step="0.1" value="{{ form_data.MonthlyCharges if form_data else '' }}" placeholder="e.g. 65.50" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Total Charges ($)</label>
+                    <input class="form-control" type="number" name="TotalCharges" min="0" max="10000" step="0.1" value="{{ form_data.TotalCharges if form_data else '' }}" placeholder="e.g. 780.00" required />
+                </div>
+            </div>
 
-        <div class="mb-3">
-          <label class="form-label">Multiple Lines</label>
-          <select class="form-control" name="MultipleLines" required>
-            <option selected disabled value="">Select</option>
-            <option value="No">No</option>
-            <option value="Yes">Yes</option>
-            <option value="No phone service">No phone service</option>
-          </select>
-        </div>
+            <input class="btn-submit" type="submit" value="Predict Churn Risk" />
+        </form>
 
-        <div class="mb-3">
-          <label class="form-label">Internet Service</label>
-          <select class="form-control" name="InternetService" required>
-            <option selected disabled value="">Select</option>
-            <option value="DSL">DSL</option>
-            <option value="Fiber optic">Fiber optic</option>
-            <option value="No">No</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Online Security</label>
-          <select class="form-control" name="OnlineSecurity" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Online Backup</label>
-          <select class="form-control" name="OnlineBackup" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Device Protection</label>
-          <select class="form-control" name="DeviceProtection" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Tech Support</label>
-          <select class="form-control" name="TechSupport" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Streaming TV</label>
-          <select class="form-control" name="StreamingTV" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Streaming Movies</label>
-          <select class="form-control" name="StreamingMovies" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-            <option value="No internet service">No internet service</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Contract</label>
-          <select class="form-control" name="Contract" required>
-            <option selected disabled value="">Select</option>
-            <option value="Month-to-month">Month-to-month</option>
-            <option value="One year">One year</option>
-            <option value="Two year">Two year</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Paperless Billing</label>
-          <select class="form-control" name="PaperlessBilling" required>
-            <option selected disabled value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Payment Method</label>
-          <select class="form-control" name="PaymentMethod" required>
-            <option selected disabled value="">Select</option>
-            <option value="Electronic check">Electronic check</option>
-            <option value="Mailed check">Mailed check</option>
-            <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
-            <option value="Credit card (automatic)">Credit card (automatic)</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Tenure (in months)</label>
-          <input class="form-control" type="number" name="tenure" min="0" max="100" step="1" required />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Monthly Charges</label>
-          <input class="form-control" type="number" name="MonthlyCharges" min="0" max="200" step="0.1" required />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Total Charges</label>
-          <input class="form-control" type="number" name="TotalCharges" min="0" max="10000" step="0.1" required />
-        </div>
-
-        <div class="mb-3">
-          <input class="btn btn-primary" type="submit" value="Predict Churn" />
-        </div>
-      </form>
-
-      <h2>Prediction: {{results}}</h2>
+        <!-- 3-Tier Prediction Result Display -->
+        {% if results %}
+            <div class="result-card {{ results.class }}">
+                <div class="result-title">Customer Churn Analysis</div>
+                <div class="result-badge {{ results.class }}">{{ results.level }}</div>
+                <div class="result-prob">Estimated Probability of Churn: <strong>{{ results.probability }}%</strong></div>
+            </div>
+        {% endif %}
     </div>
-  </body>
+</body>
 </html>

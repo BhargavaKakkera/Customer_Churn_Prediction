@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title> Customer Churn Prediction</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='3') }}">
 </head>
 <body>
-    <div style="text-align:center; padding-top:50px;">
-        <h1>Welcome to the Customer Churn Predictor</h1>
-        <p>Click below to start predicting churn based on customer information.</p>
-        <a href="/predictdata">
-            <button style="padding: 10px 20px; font-size: 16px;">Start Prediction</button>
-        </a>
+    <div class="container welcome-container">
+        <div class="welcome-logo">📊</div>
+        <h1>Customer Churn Predictor</h1>
+        <p class="welcome-description">Identify high-risk customers, understand predictive churn behavior, and make data-driven retention decisions using optimized machine learning models.</p>
+        <a href="/predictdata" class="btn-start">Start Churn Prediction</a>
     </div>
 </body>
 </html>
