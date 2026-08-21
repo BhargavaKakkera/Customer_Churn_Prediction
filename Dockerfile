@@ -8,6 +8,7 @@ COPY app.py .
 COPY src/ ./src/   
 COPY saved_model/ ./saved_model/
 COPY templates/ ./templates/
+COPY static/ ./static/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
